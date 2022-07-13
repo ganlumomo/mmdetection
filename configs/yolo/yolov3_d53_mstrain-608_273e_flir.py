@@ -56,8 +56,8 @@ model = dict(
         nms=dict(type='nms', iou_threshold=0.45),
         max_per_img=100))
 # dataset settings
-dataset_type = 'CocoDataset'
-data_root = '/home/carson/data/FLIR_ADAS_v2/'
+dataset_type = 'FlirDataset'
+data_root = '/groups/ARCL/FLIR_ADAS_v2/'
 img_norm_cfg = dict(mean=[0, 0, 0], std=[255., 255., 255.], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', to_float32=True),
@@ -99,17 +99,17 @@ data = dict(
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_train/coco_v2.json',
+        ann_file=data_root + 'images_rgb_train/coco.json',
         img_prefix=data_root + 'images_rgb_train/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_val/coco_v2.json',
+        ann_file=data_root + 'images_rgb_val/coco.json',
         img_prefix=data_root + 'images_rgb_val/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_val/coco_v2.json',
+        ann_file=data_root + 'images_rgb_val/coco.json',
         img_prefix=data_root + 'images_rgb_val/',
         pipeline=test_pipeline))
 # optimizer
@@ -121,12 +121,16 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=2000,  # same as burn-in in darknet
     warmup_ratio=0.1,
-    step=[218, 246])
+    step=[74, 87])
+#    step=[218, 246])
 # runtime settings
-runner = dict(type='EpochBasedRunner', max_epochs=273)
+runner = dict(type='EpochBasedRunner', max_epochs=100)
+#runner = dict(type='EpochBasedRunner', max_epochs=273)
 evaluation = dict(interval=1, metric=['bbox'])
+checkpoint_config = dict(max_keep_ckpts=10)
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
 auto_scale_lr = dict(base_batch_size=64)
+load_from = './checkpoints/yolov3_d53_mstrain-608_273e_coco_20210518_115020-a2c3acb8.pth'
