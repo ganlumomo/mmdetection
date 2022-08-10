@@ -57,7 +57,7 @@ model = dict(
         max_per_img=100))
 # dataset settings
 dataset_type = 'FlirDataset'
-data_root = '/groups/ARCL/FLIR_ADAS_v2/'
+data_root = '/groups/ARCL/FLIR-aligned/'
 img_norm_cfg = dict(mean=[0, 0, 0], std=[255., 255., 255.], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', to_float32=True),
@@ -100,17 +100,22 @@ data = dict(
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'images_rgb_train/coco.json',
-        img_prefix=data_root + 'images_rgb_train/',
+        img_prefix=data_root + 'images_rgb_train/data/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         ann_file=data_root + 'images_rgb_val/coco.json',
-        img_prefix=data_root + 'images_rgb_val/',
+        img_prefix=data_root + 'images_rgb_val/data/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
+        ann_file=data_root + 'images_thermal_val/coco.json',
+        img_prefix=data_root + 'images_thermal_val/data/',
+        pipeline=test_pipeline),
+    test2=dict(
+        type=dataset_type,
         ann_file=data_root + 'images_rgb_val/coco.json',
-        img_prefix=data_root + 'images_rgb_val/',
+        img_prefix=data_root + 'images_rgb_val/data/',
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
