@@ -97,6 +97,8 @@ def multi_model_single_gpu_test(model,
             result = model(return_loss=False, rescale=True, **data)
             result2 = model(return_loss=False, rescale=True, **data2)
         
+        fused_result = results_fusion(result, result2)
+      
         batch_size = len(result)
         if show or out_dir:
             if batch_size == 1 and isinstance(data['img'][0], torch.Tensor):
@@ -121,24 +123,13 @@ def multi_model_single_gpu_test(model,
 
                 model.module.show_result(
                     img_show,
-                    result[i],
+                    fused_result,
                     bbox_color=PALETTE,
                     text_color=PALETTE,
                     mask_color=PALETTE,
                     show=show,
                     out_file=out_file,
                     score_thr=show_score_thr)
-
-        # encode mask results
-        if isinstance(result[0], tuple):
-            result = [(bbox_results, encode_mask_results(mask_results))
-                      for bbox_results, mask_results in result]
-        # This logic is only used in panoptic segmentation test.
-        elif isinstance(result[0], dict) and 'ins_results' in result[0]:
-            for j in range(len(result)):
-                bbox_results, mask_results = result[j]['ins_results']
-                result[j]['ins_results'] = (bbox_results,
-                                            encode_mask_results(mask_results))
 
         if show or out_dir:
             if batch_size == 1 and isinstance(data2['img'][0], torch.Tensor):
@@ -163,7 +154,7 @@ def multi_model_single_gpu_test(model,
 
                 model2.module.show_result(
                     img_show,
-                    result2[i],
+                    fused_result,
                     bbox_color=PALETTE,
                     text_color=PALETTE,
                     mask_color=PALETTE,
@@ -171,20 +162,8 @@ def multi_model_single_gpu_test(model,
                     out_file=out_file,
                     score_thr=show_score_thr)
 
-        # encode mask results
-        if isinstance(result2[0], tuple):
-            result2 = [(bbox_results, encode_mask_results(mask_results))
-                      for bbox_results, mask_results in result2]
-        # This logic is only used in panoptic segmentation test.
-        elif isinstance(result2[0], dict) and 'ins_results' in result2[0]:
-            for j in range(len(result2)):
-                bbox_results, mask_results = result2[j]['ins_results']
-                result2[j]['ins_results'] = (bbox_results,
-                                             encode_mask_results(mask_results))
-
-        fused_result = results_fusion(result, result2)
         results.extend([fused_result])
-
+        
         for _ in range(batch_size):
             prog_bar.update()
     return results
