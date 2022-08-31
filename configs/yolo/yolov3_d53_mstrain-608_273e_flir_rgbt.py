@@ -14,7 +14,7 @@ model = dict(
         out_channels=[512, 256, 128]),
     bbox_head=dict(
         type='YOLOV3Head',
-        num_classes=80,
+        num_classes=3,
         in_channels=[512, 256, 128],
         out_channels=[1024, 512, 256],
         anchor_generator=dict(
@@ -56,8 +56,9 @@ model = dict(
         nms=dict(type='nms', iou_threshold=0.45),
         max_per_img=100))
 # dataset settings
-dataset_type = 'FlirCocoDataset'
-data_root = '/groups/ARCL/FLIR-aligned/'
+dataset_type = 'FlirDataset'
+#data_root = '/groups/ARCL/FLIR-aligned/'
+data_root = '/home/carson/users/lu_gan/FLIR-aligned/'
 img_norm_cfg = dict(mean=[0, 0, 0], std=[255., 255., 255.], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', to_float32=True),
@@ -99,22 +100,22 @@ data = dict(
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_train/coco.json',
+        ann_file=data_root + 'images_rgb_train/flir.json',
         img_prefix=data_root + 'images_rgb_train/data/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_val/coco.json',
+        ann_file=data_root + 'images_rgb_val/flir.json',
         img_prefix=data_root + 'images_rgb_val/data/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_thermal_val/coco.json',
+        ann_file=data_root + 'images_thermal_val/flir.json',
         img_prefix=data_root + 'images_thermal_val/data/',
         pipeline=test_pipeline),
     test2=dict(
         type=dataset_type,
-        ann_file=data_root + 'images_rgb_val/coco.json',
+        ann_file=data_root + 'images_rgb_val/flir.json',
         img_prefix=data_root + 'images_rgb_val/data/',
         pipeline=test_pipeline))
 # optimizer
