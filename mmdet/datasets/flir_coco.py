@@ -20,8 +20,8 @@ from .custom import CustomDataset
 
 
 @DATASETS.register_module()
-class FlirDataset(CustomDataset):
-    '''
+class FlirCocoDataset(CustomDataset):
+    
     CLASSES = ('person', 'bike', 'car', 'motor', 'airplane', 'bus',
                'train', 'truck', 'boat', 'light', 'hydrant',
                'sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
@@ -36,6 +36,7 @@ class FlirDataset(CustomDataset):
                'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
                'oven', 'toaster', 'sink', 'stroller', 'rider', 'scooter',
                'vase', 'scissors', 'face', 'other vehicle', 'license plate')
+
     PALETTE = [(220, 20, 60), (119, 11, 32), (0, 0, 142), (0, 0, 230),
                (106, 0, 228), (0, 60, 100), (0, 80, 100), (0, 0, 70),
                (0, 0, 192), (250, 170, 30), (100, 170, 30), (220, 220, 0),
@@ -60,7 +61,7 @@ class FlirDataset(CustomDataset):
     '''
     CLASSES = ('person', 'bike', 'car')
     PALETTE = [(220, 20, 60), (119, 11, 32), (0, 0, 142)]
-
+    '''
     def load_annotations(self, ann_file):
         """Load annotation from COCO style annotation file.
         Args:
