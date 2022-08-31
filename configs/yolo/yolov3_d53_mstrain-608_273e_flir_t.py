@@ -125,6 +125,7 @@ lr_config = dict(
 # runtime settings
 runner = dict(type='EpochBasedRunner', max_epochs=10)
 evaluation = dict(interval=1, metric=['bbox'])
+checkpoint_config = dict(max_keep_ckpts=10)
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
