@@ -14,7 +14,7 @@ model = dict(
         out_channels=[512, 256, 128]),
     bbox_head=dict(
         type='YOLOV3Head',
-        num_classes=80,
+        num_classes=3,
         in_channels=[512, 256, 128],
         out_channels=[1024, 512, 256],
         anchor_generator=dict(
@@ -113,21 +113,18 @@ data = dict(
         img_prefix=data_root + 'images_thermal_val/data/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
+optimizer = dict(type='SGD', lr=0.0005, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=2000,  # same as burn-in in darknet
-    warmup_ratio=0.1,
-    step=[74, 87])
-#    step=[218, 246])
+    warmup_iters=500,  # same as burn-in in darknet
+    warmup_ratio=0.01,
+    step=[8])
 # runtime settings
-runner = dict(type='EpochBasedRunner', max_epochs=100)
-#runner = dict(type='EpochBasedRunner', max_epochs=273)
+runner = dict(type='EpochBasedRunner', max_epochs=10)
 evaluation = dict(interval=1, metric=['bbox'])
-checkpoint_config = dict(max_keep_ckpts=10)
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.

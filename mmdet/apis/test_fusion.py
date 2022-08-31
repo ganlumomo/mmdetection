@@ -95,7 +95,7 @@ def multi_model_single_gpu_test(model,
         (data, data2) = combined_data
         with torch.no_grad():
             result = model(return_loss=False, rescale=True, **data)
-            result2 = model(return_loss=False, rescale=True, **data2)
+            result2 = model2(return_loss=False, rescale=True, **data2)
         
         fused_result = results_fusion(result, result2)
       
